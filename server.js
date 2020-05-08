@@ -14,10 +14,6 @@ var app = express();
 var PORT = process.env.PORT || 3210;
 
 
-// create application/x-www-form-urlencoded parser
-const urlencodedParser = bodyParser.urlencoded({
-    extended: false
-});
 
 //creating unique 6-char identifier
 const generateHash = function () {
@@ -70,6 +66,11 @@ app.use(cors());
 
 /** this project needs to parse POST bodies **/
 // you should mount the body-parser here
+
+// create application/x-www-form-urlencoded parser
+const urlencodedParser = bodyParser.urlencoded({
+    extended: false
+});
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
