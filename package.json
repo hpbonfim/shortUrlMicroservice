@@ -1,31 +1,36 @@
 {
-    "name": "shorturl",
-    "version": "0.0.2",
-    "description": "API project for freeCodeCamp",
-    "main": "server.js",
-    "scripts": {
-      "start": "node server.js"
-    },
-    "dependencies": {
-      "express": "^4.17.1",
-      "mongodb": "^3.5.7",
-      "mongoose": "^5.9.12",
-      "cors": "^2.8.5",
-      "body-parser": "^1.19.0",
-      "dns": "^0.2.2",
-      "url": "^0.11.0"
-    },
-    "engines": {
-      "node": "10.17.0"
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/hpbonfim/shortUrlMicroservice"
-    },
-    "keywords": [
-      "node",
-      "hyperdev",
-      "express"
-    ],
-    "license": "MIT"
-  }
+  "name": "shorturl",
+  "version": "0.0.2",
+  "description": "API project for freeCodeCamp",
+  "main": "server.js",
+  "scripts": {
+    "start": "tsc && node ./build/server.js"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.6",
+    "@types/mongodb": "^3.5.16",
+    "@types/mongoose": "^5.7.18",
+    "@types/node": "^13.13.5",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dns": "^0.2.2",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.7",
+    "mongoose": "^5.9.12",
+    "url": "^0.11.0"
+  },
+  "engines": {
+    "node": "10.17.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hpbonfim/shortUrlMicroservice"
+  },
+  "keywords": [
+    "node",
+    "hyperdev",
+    "express"
+  ],
+  "license": "MIT"
+}

@@ -1,24 +1,17 @@
-'use strict';
-
-var express = require('express');
-var mongo = require('mongodb');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser')
+"use strict";
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const dns = require("dns");
 const url = require("url");
-var cors = require('cors');
-
-var app = express();
-
-// Basic Configuration 
-var PORT = process.env.PORT || 3210;
-
-
-
-//creating unique 6-char identifier
+const cors = require("cors");
+const app = express();
+const PORT = process.env.PORT || 3210;
 const generateHash = function () {
-    const ALPHABET =
-        "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const ID_LENGTH = 6;
     let HASH = "";
     for (let i = 0; i < ID_LENGTH; i++) {
@@ -26,29 +19,16 @@ const generateHash = function () {
     }
     return HASH;
 };
-
-
-/** this project needs a db !! **/
-// mongoose.connect(process.env.DB_URI);
-
-mongoose //https://docs.atlas.mongodb.com/driver-connection/#driver-examples
-    .connect(
-        `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-xgb1n.mongodb.net/test?retryWrites=true&w=majority`, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        },
-        () => {
-            console.log(mongoose.connection.readyState); //0: disconnected 1: connected 2: connecting 3: disconnecting
-        }
-    )
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-xgb1n.mongodb.net/test?retryWrites=true&w=majority`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }, () => {
+        console.log(mongoose.connection.readyState);
+    })
     .catch(err => {
         console.log(err);
     });
-
-
-//mongoose schema
 const Schema = mongoose.Schema;
-
 const urlObjSchema = new Schema({
     url: {
         type: String,
@@ -59,34 +39,27 @@ const urlObjSchema = new Schema({
         required: true
     }
 });
-
 const UrlObj = mongoose.model("UrlObj", urlObjSchema);
-
-app.use(cors());
-
-/** this project needs to parse POST bodies **/
-// you should mount the body-parser here
-
-// create application/x-www-form-urlencoded parser
+const options = {
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
+    credentials: true,
+    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+    origin: "localhost",
+    preflightContinue: false
+};
+app.use(cors(options));
 const urlencodedParser = bodyParser.urlencoded({
     extended: false
 });
-
 app.use('/public', express.static(process.cwd() + '/public'));
-
 app.get('/', function (req, res) {
     res.sendFile(process.cwd() + '/views/index.html');
 });
-
-
-// your first API endpoint... 
 app.get("/api/hello", function (req, res) {
     res.json({
         greeting: 'hello API'
     });
 });
-
-
 app.post("/resultURL", urlencodedParser, function (req, res) {
     let parsedUrl = url.parse(req.body.url);
     dns.lookup(parsedUrl.hostname, function (err) {
@@ -104,18 +77,15 @@ app.post("/resultURL", urlencodedParser, function (req, res) {
                     ?
                     res.json(err) :
                     res.render("resultURL", {
-                        // link: `${req.headers.origin}/api/shorturl/${urlObj.hash}`
                         link: `${req.headers.origin}/sh/${urlObj.hash}`
                     });
             });
         }
     });
 });
-
 app.get("/resultURL", (req, res) => {
     res.render("resultURL");
 });
-
 app.get("/sh/:hash", function (req, res) {
     UrlObj.findOne({
         hash: req.params.hash
@@ -131,10 +101,6 @@ app.get("/sh/:hash", function (req, res) {
         }
     });
 });
-
-
-
-// listen for requests :)
-var listener = app.listen(PORT, function () {
-    console.log("Your app is listening on port " + listener.address().port)
-})
+const listener = app.listen(PORT, function () {
+    console.log("Your app is listening on port " + listener.address().port);
+});
